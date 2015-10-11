@@ -104,16 +104,12 @@ class User extends CI_Controller
             $this->load->view('login', array('title' => 'Login form', 'message_enter' => FALSE));		
         }
         else{
-            //check datebase
-			$user_row = $this->user_model->is_username_password_in_db($this->input->post('username'), $this->input->post('password'));
-            if($user_row)
+            //Try to find user in the database by his username/password
+			$user = $this->user_model->find_for_login($this->input->post('username'), $this->input->post('password'));
+            if($user)
 			{
-				foreach ($user_row as $row)
-        		{	
-					$id = $row['id'];
-				}
-				//write in session 
-				$this->session->set_userdata('id', $id);
+				// Put user info into the session. ID is enough to authenticate user
+				$this->session->set_userdata('id', $user['id']);
 				
 				redirect( base_url(). 'index.php/shop/index');
 				

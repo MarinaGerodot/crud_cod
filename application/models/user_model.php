@@ -95,20 +95,23 @@ class User_model extends CI_Model
     }
 	
 	/* 
-	* This method search username & email in datebase
-	* @param $password string , $username string
-	* @return array $result 
-	*/
+	* Search user by his username & password in the database 
+	* @param string $password Raw password. It will be automatically encoded inside this method
+	* @param string $username
+	* @return array $user User if found, FALSE otherwise 
+ 	*/
 	
-	function is_username_password_in_db($username, $password )
+	function find_for_login($username, $password )
     {
+		// Encode password in the same way as in the register method
+        // If you want to change this, don't forget to update the register as well
 		$password = hash('sha512', $password);
 		
 		$this->db->where('username', $username);
 		$this->db->where('password', $password);
-		
-		$result = $this->db->get('users')->result_array();		
-        return $result;		
+	
+		$results = $this->db->get('users')->result_array();		
+		return (empty($results)) ? FALSE : $results[0];		
     }  
 		
 	 // method to create a new user

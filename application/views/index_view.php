@@ -37,6 +37,10 @@ require_once('header.php');
 				 <div align="left">                    
 				<a href="<?php echo base_url().'index.php/shop/add_product/';?>"><span> </span>CREATE NEW PRODUCT</a>
 				</div>
+				<br/>
+				 <div align="left">                    
+				<a href="<?php echo base_url().'index.php/ajax/add_product_form/';?>"><span> </span>CREATE NEW PRODUCT_AJAX</a>
+				</div>
 <?php  else:  ?> 
 				<div class="row">
 				<div class="col-sm-3"><font color = #3333cc><span> </span>YOUR ACCOUNT</font></div>
@@ -66,9 +70,8 @@ require_once('header.php');
 			<h4><font color = #ff0000><?php echo $message_add; ?></font></h4>	
         </div>
  </br></br></br> 
-	
-<!-- Если пользователь не Anonymous выводим список всех товаров с редактированием -->
-<?php  if($id): //здесь сделать привязку по ID(есть в сессии ID или нет)(empty($id))
+
+<?php  if($id): 
        
 	 $count = 0; 
      foreach( $product_fields as $product):
@@ -89,8 +92,7 @@ require_once('header.php');
 	   		     	    </div>
                     </div>
                  </div>
-                
-                    	<!-- Выводим построчно, по три товара в строке  -->    
+
 	   		     		<?php  $count = $count + 1; 
                               if($count == 3 ):  ?>
 		                         <div class="clearfix"> </div>
@@ -104,7 +106,7 @@ require_once('header.php');
                   <div class="clearfix"> </div>     
                   </br></br></br></br>
                  
-<?php  else: ?><!-- Если пользователь Anonymous выводим список всех товаров без редактирования -->
+<?php  else: ?>
 				 
 	<?php $count = 0;       
 	foreach( $product_fields as $product):  ?>
@@ -119,7 +121,7 @@ require_once('header.php');
 				     Rs. 499
 			   	</div>
               </div>
-              <!-- Выводим построчно, по три товара в строке  -->    
+   
               <?php $count = $count + 1;
                 if($count == 3):  ?>
 		          <div class="clearfix"> </div>
@@ -134,6 +136,10 @@ require_once('header.php');
 </div>
 	
 <?php require_once('footer.php'); ?>
+
+  
+   
+
 
   
    

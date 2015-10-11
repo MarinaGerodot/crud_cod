@@ -28,7 +28,7 @@ require_once('header.php');
  	<div class="form-group">
 		<div class="col-sm-4" style="float: none; padding-left: 0px">
           <label class="col-sm-1 control-label required" for="Pproduct_title" style="float: none; padding-left: 0px" >Title</label>
-            <input type="text" name="title" class="form-control" value="<?php  if (is_array ($single_product))  { echo htmlspecialchars($single_product['title']); } if($message_enter) { echo set_value('title'); } ?>"/>
+            <input type="text" name="title" class="form-control" value="<?php  if (is_array ($single_product))  { echo htmlspecialchars($single_product['title']); } else { echo set_value('title'); } ?>"/>
 			<font color = #ff0000><?php echo form_error('title');?></font>
 					<span class="help-block"> </span>
               
@@ -38,29 +38,28 @@ require_once('header.php');
 	<div class="form-group">
 		<div class="col-sm-4" style="float: none; padding-left: 0px">
             <label class="col-sm-1 control-label required" for="product_description" style="float: none; padding-left: 0px">Description</label>
-					<input type="text" name="description" class="form-control" value="<?php  if (is_array ($single_product))  { echo htmlspecialchars($single_product['description']); }	if($message_enter) { echo set_value('description'); } ?>"/>
+					<input type="text" name="description" class="form-control" value="<?php  if (is_array ($single_product))  { echo htmlspecialchars($single_product['description']); } else { echo set_value('description'); } ?>"/>
 					<font color = #ff0000><?php echo form_error('description');?></font>
 					<span class="help-block"> </span>
                
 		</div>
     </div>			
 
-
- 	<div class="form-group">
+<div class="form-group">
 		<div class="col-sm-4" style="float: none; padding-left: 0px">
+		
          <label class="col-sm-1 control-label required" for="product_photo" style="float: none; padding-left: 0px">Photo</label>
-					<input type="text" name="photo" class="form-control" value="<?php  if (is_array ($single_product))  { echo htmlspecialchars($single_product['photo']); }	if($message_enter) { echo set_value('photo'); } ?>"/>
-					<font color = #ff0000><?php echo form_error('photo');?></font>
-					<span class="help-block"></span>
+					<input type="file" name="photo_file" accept="image/jpeg,image/gif,image/x-png" value="<?php echo set_value('photo_file');  ?>"/>
+					<font color = #ff0000><?php  if ($error_upload) { echo $error_upload; } ?></font>
 		</div>
     </div>
 	<br/>
+	
 	<div class="form-group">
 		<div class="col-sm-10" style="float: none; padding-left: 0px">
 		 <label class="col-sm-1 control-label required" for="product_photo" style="float: none; padding-left: 0px">Category</label>
-		 
-         	<?php echo form_dropdown('category', $select_category, $single_product['category_id']); ?>
-			
+		 <?php if ($request_category) { echo form_dropdown('category', $select_category, $request_category);}
+                                        else { echo form_dropdown('category', $select_category, $single_product['category_id']); } ?>	
 		</div>
     </div>
 	

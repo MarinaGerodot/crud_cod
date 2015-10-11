@@ -15,6 +15,7 @@ class Ajax extends CI_Controller {
         $this->load->library('session');
 
         $this->load->model('user_model','',TRUE);
+		$this->load->model('product_model','',TRUE);
         
     }
 
@@ -89,7 +90,7 @@ class Ajax extends CI_Controller {
 			
         }else {
 			 
-			$this->form_validation->set_message ('is_username_exist', 'Username already exists');
+			$this->form_validation->set_message ('is_username_in_db', 'Username already exists');
 			return false;
 		}
     }
@@ -107,7 +108,7 @@ class Ajax extends CI_Controller {
 			
         }else {
 			 
-			$this->form_validation->set_message ('is_email_exist', 'Email already exists');
+			$this->form_validation->set_message ('is_email_in_db', 'Email already exists');
 			return false;
 		}
     }
@@ -157,18 +158,12 @@ class Ajax extends CI_Controller {
 				return;
 									
 	        } else {
+
+				$user_row = $this->user_model->find_for_login($this->input->post('username'), $this->input->post('password'));
 				
-				//check datebase
-				$user_row = $this->user_model->is_username_password_in_db($this->input->post('username'), $this->input->post('password'));
-				if($user_row)
+				if($user)
 				{
-					foreach ($user_row as $row)
-					{	
-						$id = $row['id'];
-					}
-					//write in session 
-					$this->session->set_userdata('id', $id);
-					
+					$this->session->set_userdata('id', $user['id']);
 					// JSON success response. Returns the redirect URL:
 					echo '{"status":1,"redirectURL":"'.$redirectURL1.'"}';
 					return;	
@@ -183,7 +178,95 @@ class Ajax extends CI_Controller {
 			}
 		}
        
-    }     
+    }
+	
+	
+	/*
+	* Metod add_product form
+	* @return response
+	*/ 
+    public function add_product_form() 
+	{
+		//obtain array category
+		$select_category = $this->product_model->get_select_category();
+		           
+		$this->load->view('add_product_ajax', array('title' => 'Add product form', 'error_upload' => false, 'select_category' => $select_category));
+								
+    }
+	
+	/*
+	* Metod ajax add_product
+	* @return response
+	*/ 
+	function ajax_add_product() 
+	{
+		$redirectURL = base_url(). 'index.php/shop/index';
+		$errors = array();
+		$product_info = array();
+		//We obtain from the session user_id
+		$user_id = $this->session->userdata('id');
+		
+		$title = $this->input->post('title');
+		$description = $this->input->post('description');
+		$category = $this->input->post('category');
+		
+		//if($this->input->get('fromAjax')) 
+		//{
+			$this->form_validation->set_rules('title', 'title', 'required|trim|min_length[3]|max_length[255]|');
+        	$this->form_validation->set_rules('description', 'description', 'required|trim|min_length[3]|max_length[255]');
+			
+	        if($this->form_validation->run() == FALSE) 
+			{
+				$errors['title'] = form_error('title');
+				$errors['description'] = form_error('description');
+				
+				$errString = array();
+				foreach($errors as $key=>$value)
+				{
+					// The name of the field that caused the error, and the
+					// error text are grouped as key/value pair for the JSON response:
+					$errString[]='"'.$key.'":"'.$value.'"';
+				}
+				echo ('{"status":0,'.join(',',$errString).'}');
+				return;
+									
+	        } else {
+				
+				$product_info['title'] = $title;
+				$product_info['description'] = $description;
+				$product_info['category'] = $category;
+				
+				$config['upload_path'] = './bootstrap/img/'; 
+				$config['allowed_types'] = 'gif|jpg|png';
+				$config['max_size']	= 2000; 
+				$config['encrypt_name'] = FALSE; 
+				$config['remove_spaces'] = TRUE; 
+	
+				$this->load->library('upload', $config);
+				$upload = $this->upload->do_upload('photo_file'); 
+			 	if(!$upload)
+				{
+					$error_upload = $this->upload->display_errors();
+					$this->load->view('add_product_ajax', array('title' => 'Add product form', 'error_upload' => $error_upload, 'select_category' => $select_category));
+					return;
+											
+				}else {
+					
+					$upload_data = $this->upload->data();
+					$product_info['photo'] = $upload_data['file_name'];
+				}				
+				
+				//call method to create_product 
+				$this->product_model->create_product($product_info, $user_id);
+				///write in session flash-message
+				$this->session->set_flashdata('message_add', 'Add product success!');
+				// JSON success response. Returns the redirect URL:
+				echo '{"status":1,"redirectURL":"'.$redirectURL.'"}';
+				return;				
+	      	}
+		//}
+		}
+	     
 }
 
 

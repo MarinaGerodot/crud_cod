@@ -151,4 +151,22 @@ class Product_model extends CI_Model
         }		
         return $data;	
 	}
+
+	/*
+	* This method get photo on id product 
+	* @param $id string
+	* @return string $photo
+	*/
+	function get_photo($id)
+    {
+		$this->db->where('id', $id);
+		$result = $this->db->get('products')->result_array();
+		foreach ($result as $res)
+        {	
+			$photo = $res['photo'];
+		}
+        return $photo;
+		
+    }
+	
 }

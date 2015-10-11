@@ -77,7 +77,6 @@ class Shop extends CI_Controller
         		$product_id = $this->input->get('id');
 				//obtain from the session flash-message
 				$message_add = $this->session->flashdata('message_add');
-		
 				//we obtain array all products
 				$product_row = $this->product_model->get_product($product_id);
 				//select product for its issues in single_product.php 
@@ -128,7 +127,7 @@ class Shop extends CI_Controller
         		$product_info = $this->input->post(); //if array else 0
 				if(!$product_info) 
 				{		
-         			$this->load->view('add_product', array('title' => 'Add product form', 'error_upload' => false, 'select_category' => $select_category));
+         			$this->load->view('add_product', array('title' => 'Add product form', 'error_upload' => false, 'select_category' => $select_category, 'request_category' => false));
 					return;			
 				}			
 				if(is_array ($product_info))//if there is a data get from form 
@@ -136,11 +135,12 @@ class Shop extends CI_Controller
 					$this->form_validation->set_rules('title', 'title', 'required|trim|min_length[3]|max_length[255]|callback_title_not_exists');
 					$this->form_validation->set_rules('description', 'description', 'required|trim|min_length[3]|max_length[255]');
 			
-					//$this->form_validation->set_rules('photo', 'photo_file', 'required');  
+					//We obtain from the request_category from POST
+					$request_category = $product_info['category'];
                    	
             		if($this->form_validation->run() == FALSE) 
 					{
-						$this->load->view('add_product', array('title' => 'Add product form', 'error_upload' => false, 'select_category' => $select_category));
+						$this->load->view('add_product', array('title' => 'Add product form', 'error_upload' => false, 'select_category' => $select_category, 'request_category' => $request_category));
 				
 					} else {
 			
@@ -155,8 +155,7 @@ class Shop extends CI_Controller
 			 			if(!$upload)
 						{
 							$error_upload = $this->upload->display_errors();
-							$this->load->view('add_product', array('title' => 'Add product form', 'error_upload' => $error_upload, 'select_category' => $select_category));
-							
+							$this->load->view('add_product', array('title' => 'Add product form', 'error_upload' => $error_upload, 'select_category' => $select_category, 'request_category' => $request_category));
 							return;
 											
 						}else {
@@ -187,7 +186,7 @@ class Shop extends CI_Controller
 	* @return response
 	*/
 	
-	public function _update_product() 
+	public function update_product() 
 	{
 		try {			
 			
@@ -223,30 +222,51 @@ class Shop extends CI_Controller
 					//write in session id product
 					$this->session->set_userdata('product_id', $single_product['id']);
 	
-         			$this->load->view('update_product', array('title' => 'Update product form' , 'message_enter' => false , 'select_category' => $select_category , 'single_product' => $single_product));			
+         			$this->load->view('update_product', array('title' => 'Update product form' , 'error_upload' => false, 'select_category' => $select_category , 'single_product' => $single_product, 'request_category' => false));			
 					
 				}
 				//if there is a data get from form 
 				if(is_array ($product_info)) 
 				{				
 					$this->form_validation->set_rules('title', 'title', 	'required|trim|min_length[3]|max_length[255]|callback_title_not_exists');
-					$this->form_validation->set_rules('description', 'description', 	'required|trim|min_length[3]|max_length[255]|callback_description_not_exists');
-					$this->form_validation->set_rules('photo', 'photo', 	'required|trim|min_length[3]|max_length[255]|callback_photo_not_exists');	
+					$this->form_validation->set_rules('description', 'description', 	'required|trim|min_length[3]|max_length[255]|callback_description_not_exists');	
             	
+					//We obtain from the request_category from POST
+					$request_category = $product_info['category'];
+					
             		if($this->form_validation->run() == FALSE) 
 					{			
-						$this->load->view('update_product',  array('title' => 'Update product form' , 'message_enter' => true , 'select_category' => $select_category , 'single_product' => false));
+						$this->load->view('update_product',  array('title' => 'Update product form' , 'select_category' => $select_category , 'error_upload' => false, 'photo_file' => false, 'single_product' => false, 'request_category' => $request_category));
 				
 					} else {
 					
+						$config['upload_path'] = './bootstrap/img/'; 
+						$config['allowed_types'] = 'gif|jpg|png';
+						$config['max_size']	= 2000; 
+						$config['encrypt_name'] = FALSE; 
+						$config['remove_spaces'] = TRUE; 
+	
+						$this->load->library('upload', $config);
+						$upload = $this->upload->do_upload('photo_file'); 
+						
+			 			if(!$upload)
+						{
+							$error_upload = $this->upload->display_errors();
+							
+							$this->load->view('update_product', array('title' => 'Update product form', 'error_upload' => $error_upload, 'select_category' => $select_category , 'single_product' => false, 'request_category' => $request_category));
+							return;
+									
+						}else {
+					
+							$upload_data = $this->upload->data();
+							$product_info['photo'] = $upload_data['file_name'];
+						}				
 						//obtain from the session id product
 						$product_id = $this->session->userdata('product_id');
 						//call method to  update_product 
 						$this->product_model->update_product($product_info, $user_id, $product_id);
-						
 						//write in session flash-message
 						$this->session->set_flashdata('message_add', 'Update product success!');
-
 						//redirect to single_product.php
             			redirect( base_url(). 'index.php/shop/single_product/?id='.$product_id);
 					}							
@@ -306,6 +326,7 @@ class Shop extends CI_Controller
 			$this->load->view('error', array('title' => 'Delete product error', 'text_error' => $e->getMessage()));			
         }
 	}	 
+	
 	
 }
   

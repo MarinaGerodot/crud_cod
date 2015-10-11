@@ -57,9 +57,8 @@ require_once('header.php');
 	<div class="form-group">
 		<div class="col-sm-10" style="float: none; padding-left: 0px">
 		 <label class="col-sm-1 control-label required" for="product_photo" style="float: none; padding-left: 0px">Category</label>
-		 
-         	<?php echo form_dropdown('category', $select_category, '1'); ?>
-			
+			<?php if ($request_category) { echo form_dropdown('category', $select_category, $request_category);}
+                                        else { echo form_dropdown('category', $select_category, '1'); } ?>
 		</div>
     </div>
 	
