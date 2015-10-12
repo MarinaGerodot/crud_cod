@@ -39,10 +39,10 @@ require_once('header.php');
 
 			$.ajax({
     			type: 'POST',
-				dataType : 'json', 
+			dataType : 'json', 
     			url: url,
     			data: formData,
-				processData: false,
+			processData: false,
     			beforeSend: function(response) {
 
 					$('#addProductForm').submit.disabled = true;
