@@ -17,25 +17,19 @@ require_once('header.php');
 <script type="application/javascript">
 
 
-	$(document).ready(function(){//выполняется после загрузки страницы
+	$(document).ready(function(){
 	// $(document).ready() is executed after the page DOM id loaded
 	
 		// Binding an listener to the submit event on the form:
-		//Привязываем слежение за отправкой формы:
 		$('#addProductForm').submit(function(e){
 	
-	
 			// If a previous submit is in progress:
-			//Если прошлая отправка еще не завершилась:
 			if($('#submit').hasClass('active')) return false;
 		
-		
 			// Adding the active class to the button. Will show the preloader gif:
-			//Добавляем класс active dyjgrt. Будем отображать gif прелоадер:
 			$('#submit').addClass('active');
 		
 			// Removing the current error tooltips
-			//Убираем текущие сообщения об ошибках
 			$('.errorTip').remove();
 		
 			console.log("execut 1");
@@ -49,26 +43,21 @@ require_once('header.php');
     			url: url,
     			data: formData,
 				processData: false,
-    			beforeSend: function(response) {//здесь response это ответ сервера (экшена ajax_check()) 
-			
-					//console.log("execut beforeSend");//смотрим сообщение в консоли
-        			//ЗДЕСЬ мы делаем кнопку неактивной
+    			beforeSend: function(response) {
+
 					$('#addProductForm').submit.disabled = true;
     			},
     			success: function(response) { 
 					
-					//Если все нормально
-					if(response.status)//здесь либо "status":1 либо в случае ошибки "status":0
+					if(response.status)
 					{ 
-                    	location.replace(response.redirectURL);//здесь redirectURL равен переменной $redirectURL из экшена ajax_check()
+                    	location.replace(response.redirectURL);
 						console.log("execut success");			
 						$('#submit').removeClass('active');	
 					}else {
 					
 						console.log("execut error");
 				
-						// Проходим через все текстовые ячейки,
-                		// и проверяем где именно ошибка
 						$('input[type!=submit]').each(function(){
 							var elem = $(this);
 							var id = elem.attr('id');
@@ -76,16 +65,14 @@ require_once('header.php');
 							if(response[id])
 								showTooltip(elem,response[id]);
 						});
-						$('#submit').removeClass('active');	//если здесь это не прописывать, то после сообщений об ошибках данные из формы не отправляются!!!
+						$('#submit').removeClass('active');
 					}			
     			},
-				
 				error: function(data){
                 console.log("error");
             	},
-
     			complete: function(response) {
-        			//ЗДЕСЬ мы делаем кнопку активной
+        		
 					$('#addProductForm').removeAttr("disabled");
 					//console.log("execut complete");
     			},
@@ -94,7 +81,6 @@ require_once('header.php');
 			e.preventDefault();
 
 			$(window).resize();
-	
 		});
 
 	});
