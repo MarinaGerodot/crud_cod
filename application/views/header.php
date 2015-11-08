@@ -18,7 +18,13 @@ ___________________________________________________
 
 <link rel="stylesheet" href="<?php echo base_url(). 'bootstrap/css/bootstrap.min.css';?>" type="text/css" media="all"/>
    <!--theme-style-->
- <link rel="stylesheet" href="<?php echo base_url(). 'bootstrap/css/bootstrap-theme.min.css';?>" type="text/css" media="all"/>   	 <script src="<?php echo base_url(). 'bootstrap/js/jquery-1.4.2.js';?>"></script>		
+ <link rel="stylesheet" href="<?php echo base_url(). 'bootstrap/css/bootstrap-theme.min.css';?>" type="text/css" media="all"/>   	<!--<script src="<?php //echo base_url(). 'bootstrap/js/jquery-1.4.2.js';?>"></script>-->
+<script src="<?php echo base_url(). 'bootstrap/js/jquery-1.js';?>"></script>
+<script src="<?php echo base_url(). 'bootstrap/js/jquery-migrate-1.js';?>"></script>	
+<script src="<?php echo base_url(). 'bootstrap/js/jquery-login.js';?>"></script>
+<script src="<?php echo base_url(). 'bootstrap/js/jquery-signup.js';?>"></script>
+<script src="<?php echo base_url(). 'bootstrap/js/jquery-add-product.js';?>"></script>
+ 		
       <!--//theme-style-->
       <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
         
