@@ -44,6 +44,7 @@ require_once('header.php');
           <br/><br/>    
             <div align="left">
  				<a class="now-get get-cart" href="<?php echo base_url(). 'index.php/shop/update_product/?id='.$single_product['id'];?>">Update Product |</a>
+				<a class="now-get get-cart" href="<?php echo base_url(). 'index.php/ajax/update_product_form/?id='.$single_product['id'];?>">Update Product AJAX|</a>
                 <a class="now-get get-cart" href="<?php echo base_url(). 'index.php/shop/delete_product/?id='.$single_product['id'];?>" onclick='return erase();'>Delete Product</a>
             </div>
          <div class="clearfix"> </div>     

@@ -49,7 +49,7 @@ require_once('header.php');
 		<div class="col-sm-4" style="float: none; padding-left: 0px">
 		
          <label class="col-sm-1 control-label required" for="product_photo" style="float: none; padding-left: 0px">Photo</label>
-					<input type="file" name="photo_file" accept="image/jpeg,image/gif,image/x-png" value="<?php echo set_value('photo_file'); ?>"/>
+					<input type="file" name="photo_file" accept="image/jpeg,image/gif,image/x-png" value=""/>
 					<font color = #ff0000><?php  if ($error_upload) { echo $error_upload; } ?></font>
 		</div>
     </div>
@@ -57,8 +57,10 @@ require_once('header.php');
 	<div class="form-group">
 		<div class="col-sm-10" style="float: none; padding-left: 0px">
 		 <label class="col-sm-1 control-label required" for="product_photo" style="float: none; padding-left: 0px">Category</label>
-			<?php if ($request_category) { echo form_dropdown('category', $select_category, $request_category);}
-                                        else { echo form_dropdown('category', $select_category, '1'); } ?>
+		 
+         	<?php if ($request_category) { echo form_dropdown('category', $select_category, $request_category);}
+					else { echo form_dropdown('category', $select_category, '1'); } ?>
+			
 		</div>
     </div>
 	
